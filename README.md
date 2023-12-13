@@ -10,9 +10,6 @@ To execute hard negative sampling on the batch-level, we train the model using u
 **Epoch-Level Hard Negative Sampling**
 We take a more global approach for epoch-level hard negative sampling. For the initial epoch, we use uniform negative sampling for negative examples. From the second epoch onward, we compute the scores for all negative samples across all users in the previous epoch, and select those with the highest scores. By incorporating these epoch-level hard negative examples with the positive samples in the subsequent training, we aim to provide the model with challenging instances that span the entire dataset.
 
-## Environment Requirement
-See `requirement.txt`
-
 ## Usage
 The four python notebooks are used to examine the reliability of the negative sampling methods. Each notebook includes three distinct runs of one sampling method on one datasets, with comparison with the baseline model (LightGCN without hard negative sampling).
 
@@ -26,3 +23,6 @@ We used two datasets in the experiment.
 
 - `recommenders/datasets/amazon-book/train.txt`: Amazon Book Reviews Dataset
 - `recommenders/datasets/movielens.py`: MovieLens Dataset
+
+## Environment Requirement
+See `requirement.txt`
