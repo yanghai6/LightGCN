@@ -11,7 +11,7 @@ We take a more global approach for epoch-level negative sampling. For the initia
 **Usage**
 The 4 python notebooks are used to examine the reliability of the negative sampling methods. Each notebook includes three distinct runs of one sampling method on one datasets, with comparison with the baseline model (LightGCN without hard negative sampling).
 
-- LightGCN_Hard_Batch_Amazon_Book: batch-level negative sampling on Amazon Books Dataset
-- LightGCN_Hard_Batch_MovieLens: batch-level negative sampling on MovieLens Dataset
-- LightGCN_Hard_Epoch_Amazon_Book: epoch-level negative sampling on Amazon Books Dataset
-- LightGCN_Hard_Epoch_MovieLens: epoch-level negative sampling on MovieLens Dataset
+- `LightGCN_Hard_Batch_Amazon_Book`: batch-level negative sampling on Amazon Books Dataset
+- `LightGCN_Hard_Batch_MovieLens`: batch-level negative sampling on MovieLens Dataset
+- `LightGCN_Hard_Epoch_Amazon_Boo`k: epoch-level negative sampling on Amazon Books Dataset
+- `LightGCN_Hard_Epoch_MovieLens`: epoch-level negative sampling on MovieLens Dataset
