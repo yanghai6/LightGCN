@@ -1,4 +1,4 @@
-# LightGNN
+# LightGCN
 
 ## Introduction
 
@@ -16,7 +16,13 @@ See `requirement.txt`
 ## Usage
 The four python notebooks are used to examine the reliability of the negative sampling methods. Each notebook includes three distinct runs of one sampling method on one datasets, with comparison with the baseline model (LightGCN without hard negative sampling).
 
-- `LightGCN_Hard_Batch_Amazon_Book.ipynb`: batch-level negative sampling on Amazon Books Dataset
+- `LightGCN_Hard_Batch_Amazon_Book.ipynb`: batch-level negative sampling on Amazon Book Reviews Dataset
 - `LightGCN_Hard_Batch_MovieLens.ipynb`: batch-level negative sampling on MovieLens Dataset
-- `LightGCN_Hard_Epoch_Amazon_Book.ipynb`: epoch-level negative sampling on Amazon Books Dataset
+- `LightGCN_Hard_Epoch_Amazon_Book.ipynb`: epoch-level negative sampling on Amazon Book Reviews Dataset
 - `LightGCN_Hard_Epoch_MovieLens.ipynb`: epoch-level negative sampling on MovieLens Dataset
+
+## Dataset
+We used two datasets in the experiment. 
+
+- `recommenders/datasets/amazon-book/train.txt`: Amazon Book Reviews Dataset
+- `recommenders/datasets/movielens.py`: MovieLens Dataset
