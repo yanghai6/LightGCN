@@ -1,0 +1,10 @@
+All python notebooks are initially designed to run on Google Coalb environment. 
+
+To run the notebooks on Google Colab, make sure to place the holder `LightGCN` containing 
+all notebooks and dependency python files into `Colab Notebook` folder on Google Dirve. 
+When running the scripts, Google Colab would ask for the permission to visit the files on
+your Google Drive. 
+
+To run the notebooks on your device, make sure to change the scripts at the beginning of 
+each notebooks and mount it to the correct path.
+
