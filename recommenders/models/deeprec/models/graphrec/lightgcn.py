@@ -229,10 +229,6 @@ class LightGCN (object):
                     for user_idx in all_users:
                         mask[user_idx] = np.isin(range(self.n_items), interact)
                 scores[mask] = 0
-                # for i in range(scores.shape[0]):
-                #     for j in range(scores.shape[1]):
-                #         if j in interact[i]:
-                #             scores[i, j] = 0
                 indices = np.array(np.argsort(scores.ravel()))[0][-neg_size::]
                 for idx in indices:
                     uid = idx // scores.shape[1]
@@ -262,50 +258,10 @@ class LightGCN (object):
                 mf_loss += batch_mf_loss / n_batch
                 emb_loss += batch_emb_loss / n_batch
 
-                if neg_mode == "hard2":
-                    scores = self.score(users, remove_seen=False)
-                    interact = self.data.interact_status.iloc[users]
-                    neg_scores = []
-                    neg = []
-                    pos = []
-                    for i, u in enumerate(users):
-                        positive = list(interact[self.data.col_item + "_interacted"][u])
-                        user_scores = scores[i]
-                        mask = ~np.isin(np.arange (len (user_scores)), positive)
-                        masked_scores = user_scores[mask]
-                        s = np.max(masked_scores)
-                        neg_scores.append(s)
-                        neg.append(int(np.where(user_scores == s)[0]))
-                        pos.append(random.choice(positive))
-                    idx = np.argsort (neg_scores)[-neg_size:]
-                    hard_users = users[idx]
-                    hard_pos = pos[idx]
-                    hard_neg = neg[idx]
-
                 if neg_mode == "hard":
-                    # scores = self.score(users, remove_seen=False)
-                    # interact = self.data.interact_status.iloc[users]
-                    # neg_scores = []
-                    # neg = []
-                    # pos = []
-                    # for i, u in enumerate(users):
-                    #     positive = interact[self.data.col_item + "_interacted"][u]
-                    #     user_scores = scores[i]
-                    #     mask = ~np.isin(np.arange (len (user_scores)), positive)
-                    #     masked_scores = user_scores[mask]
-                    #     s = np.max(masked_scores)
-                    #     neg_scores.append(s)
-                    #     neg.append(int(np.where(user_scores == s)[0]))
-                    #     pos.append(random.choice(list(positive)))
-                    # idx = np.argsort (neg_scores)[-neg_size:]
-                    # hard_users = users[idx]
-                    # hard_pos = pos[idx]
-                    # hard_neg = neg[idx]
-
                     scores = self.score (users, remove_seen=False)
                     neg_scores = [scores[i][neg_items[i]] for i in range (len (users))]
                     idx = np.argsort(neg_scores)[-neg_size:]
-                    # print(idx)
                     hard_users = users[idx]
                     hard_pos = pos_items[idx]
                     hard_neg = neg_items[idx]
@@ -351,172 +307,6 @@ class LightGCN (object):
                         ),
                     )
                 )
-
-
-    #     def fit(self, neg_mode="uniform"):
-    #         """Fit the model on self.data.train. If eval_epoch is not -1, evaluate the model on `self.data.test`
-    #         every `eval_epoch` epoch to observe the training status.
-    #
-    #         """
-    #         '''
-    #
-    #     def sample_hard_neg(x):
-    #         pos_items = set (x)
-    #
-    #         best_score = float ('-inf')
-    #         num_samples = 10
-    #
-    #         sampled_ids = np.random.choice (a=self.n_items, size=num_samples, replace=False)
-    #         scores = self.score (sampled_ids)
-    #
-    #         non_pos_mask = np.array ([item not in pos_items for item in sampled_ids])
-    #
-    #         filtered_ids = sampled_ids[non_pos_mask]
-    #         filtered_scores = scores[non_pos_mask]
-    #
-    #         if len (filtered_scores) > 0:
-    #             max_score_idx = np.argmax (filtered_scores)
-    #             best_neg_id = filtered_ids[max_score_idx]
-    #         else:
-    #             best_neg_id = None
-    #
-    #         return best_neg_id
-    #
-    #     '''
-    #    def sample_hard_neg(x):
-    #        pos_items = set(x)
-    #
-    #        best_score = float('-inf')
-    #        num_samples = 10
-    #
-    #        sampled_ids = np.random.choice(a=self.n_users-1, size=num_samples, replace=False)
-    #        scores = self.score(sampled_ids, remove_seen=False)
-    #
-    #
-    #        non_pos_mask = np.array([item not in pos_items for item in sampled_ids])
-    #        '''
-    #     non_pos_mask = ~np.isin (sampled_ids, list (pos_items))
-    #     '''
-    #
-    #     filtered_ids = sampled_ids[non_pos_mask]
-    #     filtered_scores = scores[non_pos_mask]
-    #
-    #     if len(filtered_scores) > 0:
-    #         #filtered_scores = np.sum(filtered_scores, axis=1) # sum over rows
-    #         #indices = np.argmax(filtered_scores)
-    #         #best_neg_id = filtered_ids[indices]
-    #         indices = np.where(filtered_scores == filtered_scores.max())
-    #         best_neg_id = indices[0]
-    #         best_neg_id = filtered_ids[indices[0]]
-    #         '''
-    #     flat_index = np.argmax (filtered_scores.ravel ())
-    #     best_neg_id = flat_index // filtered_scores.shape[1]
-    #     '''
-    # else:
-    #     #all positive
-    #
-    #     while True:
-    #         neg_id = random.randint(0, self.n_users - 1)
-    #         if neg_id not in x:
-    #             return neg_id
-    #     '''
-    #     neg_candidates = np.setdiff1d (np.arange (self.n_users - 1), list (pos_items), assume_unique=True)
-    #     best_neg_id = np.random.choice (neg_candidates, 1)[0]
-    #     '''
-    #
-    # return best_neg_id
-    #
-    #
-    # '''
-    #
-    #
-    # for _ in range (num_samples):
-    #     neg_id = random.randint (0, self.n_items - 1)
-    #     best_neg_id = neg_id
-    #     if neg_id not in pos_items:
-    #         # Check if the model predicts a higher score for the negative item
-    #         try:
-    #             # Check if the model predicts a higher score for the negative item
-    #             score = self.score (np.array ([neg_id]))
-    #
-    #             if np.max (score) > best_score:
-    #                 best_score = np.max (score)
-    #                 best_neg_id = neg_id
-    #         except Exception as e:
-    #             continue
-    # return best_neg_id
-    # '''
-    #
-    #
-    # for epoch in range(1, self.epochs + 1):
-    # train_start = time.time()
-    # loss, mf_loss, emb_loss = 0.0, 0.0, 0.0
-    # n_batch = self.data.train.shape[0] // self.batch_size + 1
-    # for idx in range(n_batch):
-    #     users, pos_items, neg_items = self.data.train_loader(self.batch_size)
-    #     #print(neg_items)
-    #     if neg_mode == "hard":
-    #         #print("hard")
-    #         interact = self.data.interact_status.iloc[users]
-    #         neg_items = interact[self.data.col_item + "_interacted"].apply(lambda x: sample_hard_neg(x))
-    #         #print(neg_items)
-    #     elif neg_mode == "uniform":
-    #         pass
-    #         #print("uniform")
-    #     _, batch_loss, batch_mf_loss, batch_emb_loss = self.sess.run(
-    #         [self.opt, self.loss, self.mf_loss, self.emb_loss],
-    #         feed_dict={
-    #             self.users: users,
-    #             self.pos_items: pos_items,
-    #             self.neg_items: neg_items,
-    #         },
-    #     )
-    #     loss += batch_loss / n_batch
-    #     mf_loss += batch_mf_loss / n_batch
-    #     emb_loss += batch_emb_loss / n_batch
-    #
-    # if np.isnan(loss):
-    #     print("ERROR: loss is nan.")
-    #     sys.exit()
-    # train_end = time.time()
-    # train_time = train_end - train_start
-    #
-    # if self.save_model and epoch % self.save_epoch == 0:
-    #     save_path_str = os.path.join(self.model_dir, "epoch_" + str(epoch))
-    #     if not os.path.exists(save_path_str):
-    #         os.makedirs(save_path_str)
-    #     checkpoint_path = self.saver.save(  # noqa: F841
-    #         sess=self.sess, save_path=save_path_str
-    #     )
-    #     print("Save model to path {0}".format(os.path.abspath(save_path_str)))
-    #
-    # if self.eval_epoch == -1 or epoch % self.eval_epoch != 0:
-    #     print(
-    #         "Epoch %d (train)%.1fs: train loss = %.5f = (mf)%.5f + (embed)%.5f"
-    #         % (epoch, train_time, loss, mf_loss, emb_loss)
-    #     )
-    # else:
-    #     eval_start = time.time()
-    #     ret = self.run_eval()
-    #     eval_end = time.time()
-    #     eval_time = eval_end - eval_start
-    #
-    #     print(
-    #         "Epoch %d (train)%.1fs + (eval)%.1fs: train loss = %.5f = (mf)%.5f + (embed)%.5f, %s"
-    #         % (
-    #             epoch,
-    #             train_time,
-    #             eval_time,
-    #             loss,
-    #             mf_loss,
-    #             emb_loss,
-    #             ", ".join(
-    #                 metric + " = %.5f" % (r)
-    #                 for metric, r in zip(self.metrics, ret)
-    #             ),
-    #         )
-    #     )
-
 
     def load(self, model_path=None):
         """Load an existing model.
